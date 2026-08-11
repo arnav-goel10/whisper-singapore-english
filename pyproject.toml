@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "whisper-singapore-english"
+version = "0.1.0"
+description = "LoRA adaptation and WER evaluation of Whisper for Singaporean-accented English"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+# Model execution is optional so the evaluation core installs and tests anywhere.
+asr = [
+    "torch>=2.2",
+    "transformers>=4.44",
+    "peft>=0.11",
+    "librosa>=0.10",
+]
+dev = [
+    "mypy>=1.14,<2.0",
+    "pytest>=8.3,<9.0",
+    "ruff>=0.9,<1.0",
+]
+
+[project.scripts]
+whisper-sg = "whisper_singapore_english.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+files = ["src", "tests"]
+mypy_path = "src"
+explicit_package_bases = true
+
+[[tool.mypy.overrides]]
+# Model runtimes are optional extras and ship no stubs; they are reached only
+# through lazy imports inside asr.py.
+module = ["torch.*", "transformers.*", "peft.*", "librosa.*"]
+ignore_missing_imports = true

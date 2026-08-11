@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[dev]'
+
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Type check
+        run: mypy
+
+      - name: Test
+        run: pytest -q
+
+      - name: Core installs without the ML stack
+        run: |
+          python -c "import torch" 2>/dev/null && exit 1
+          python -c "from whisper_singapore_english.wer import corpus_wer; \
+                     print('evaluation core imports with no torch present')"
+
+  no-corpus-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refuse to publish licensed corpus content or model weights
+        run: |
+          set -e
+          if git ls-files | grep -Ei '\.(wav|flac|mp3|safetensors|bin|ckpt|pt|pth)$'; then
+            echo "Audio or model weights are tracked. IMDA content must not be committed."
+            exit 1
+          fi
+          # Metric logs must stay numeric: no transcripts smuggled into a CSV.
+          python - <<'PY'
+          import csv, pathlib, re, sys
+          bad = []
+          for path in pathlib.Path("results").glob("*.csv"):
+              rows = list(csv.reader(path.open()))
+              for row in rows[1:]:
+                  for cell in row:
+                      if not re.fullmatch(r"-?\d+(\.\d+)?([eE][-+]?\d+)?", cell):
+                          bad.append((str(path), cell))
+          if bad:
+              print("non-numeric cells in results CSVs:", bad[:5])
+              sys.exit(1)
+          print("results CSVs contain only numeric metrics")
+          PY

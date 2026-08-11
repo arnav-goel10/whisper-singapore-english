@@ -1,0 +1,18 @@
+[
+  {
+    "system": "openai/whisper-small",
+    "split": "test",
+    "condition": "zero-shot",
+    "utterances": 4795,
+    "corpus_wer": 0.4584,
+    "mean_utterance_wer": 0.6349
+  },
+  {
+    "system": "openai/whisper-tiny",
+    "split": "test",
+    "condition": "zero-shot",
+    "utterances": 4795,
+    "corpus_wer": 0.662,
+    "mean_utterance_wer": 0.7737
+  }
+]
