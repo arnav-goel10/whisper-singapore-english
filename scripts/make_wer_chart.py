@@ -65,13 +65,15 @@ def main() -> None:
             f'stroke="{INK}" stroke-opacity="0.18" stroke-width="1"/>'
         )
         parts.append(
-            f'<text x="{ML - 8}" y="{y + 4:.1f}" fill="{INK}" text-anchor="end">{wer}%</text>'
+            f'<text x="{ML - 8}" y="{y + 4:.1f}" fill="{INK}" '
+            f'text-anchor="end">{wer}%</text>'
         )
 
     # x labels
     for s in xs:
         parts.append(
-            f'<text x="{X(s):.1f}" y="{H - MB + 18}" fill="{INK}" text-anchor="middle">{s}</text>'
+            f'<text x="{X(s):.1f}" y="{H - MB + 18}" fill="{INK}" '
+            f'text-anchor="middle">{s}</text>'
         )
     parts.append(
         f'<text x="{ML + PW / 2:.1f}" y="{H - 10}" fill="{INK}" text-anchor="middle">'
@@ -89,7 +91,8 @@ def main() -> None:
             f'stroke="{color}" stroke-width="1.5" stroke-dasharray="6 5"/>'
         )
         parts.append(
-            f'<text x="{W - MR}" y="{y - 6:.1f}" fill="{color}" text-anchor="end">{label}</text>'
+            f'<text x="{W - MR}" y="{y - 6:.1f}" fill="{color}" '
+            f'text-anchor="end">{label}</text>'
         )
 
     # LoRA curve
@@ -98,7 +101,9 @@ def main() -> None:
         f'<polyline points="{pts}" fill="none" stroke="{CURVE}" stroke-width="2.5"/>'
     )
     for s, w in curve:
-        parts.append(f'<circle cx="{X(s):.1f}" cy="{Y(w):.1f}" r="3.5" fill="{CURVE}"/>')
+        parts.append(
+            f'<circle cx="{X(s):.1f}" cy="{Y(w):.1f}" r="3.5" fill="{CURVE}"/>'
+        )
     last_s, last_w = curve[-1]
     parts.append(
         f'<text x="{X(last_s) - 8:.1f}" y="{Y(last_w) - 10:.1f}" fill="{CURVE}" '
