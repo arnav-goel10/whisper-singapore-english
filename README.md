@@ -26,6 +26,10 @@ whisper-tiny scores better on this accent than whisper-small does untouched.
 
 The adapter trains **540,672 parameters**, about **1.4%** of whisper-tiny.
 
+![Corpus WER during LoRA adaptation: the validation curve drops from 33.1% at step 500 to 23.8% at step 3000, crossing below both zero-shot baselines](docs/wer_curve.svg)
+
+The chart is generated from the checked-in metrics by `scripts/make_wer_chart.py`; the curve is the validation split, the dashed baselines are the test split, as in the table above.
+
 Two honest caveats. The fine-tuned figures are measured on the validation split
 while the zero-shot baselines are measured on the test split, so the comparison
 is indicative rather than controlled; `whisper-sg evaluate` exists to close that
