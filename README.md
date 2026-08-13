@@ -1,5 +1,7 @@
 # Whisper for Singaporean English
 
+[![CI](https://github.com/arnav-goel10/whisper-singapore-english/actions/workflows/ci.yml/badge.svg)](https://github.com/arnav-goel10/whisper-singapore-english/actions/workflows/ci.yml)
+
 LoRA adaptation of Whisper for Singaporean-accented English, with a word error
 rate harness that treats corpus WER and mean per-utterance WER as the different
 things they are.
